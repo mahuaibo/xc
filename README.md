@@ -158,7 +158,25 @@ contract XC {
     XCPlugin private xcPlugin;
 }
 ```
-> 1) INK 为 Token合约；XCPlugin 为跨链功能合约；XC 为跨链合约；
+> 1） INK 为 Token合约；XCPlugin 为跨链功能合约；XC 为跨链合约；
 >
-> 2) INK、XCPlugin 为XC功能插件合约；
+> 2）INK、XCPlugin 为XC功能插件合约；
 > 
+
+## 使用
+
+### 安装INK合约
+略
+### 安装XCPlugin合约
+```
+1）通过 addPlatform、deletePlatfrom、getPlatfrom、existPlatfrom 方法维护可信平台信息；
+2）通过 addPublickey、deletePublickey、countOfPublickey 方法维护可信平台的可信公钥信息；
+3）通过 setWeight、getWeight 方法设置各个可信平台的验证权重；
+```
+
+### 安装XC合约；
+
+```
+1）在XC合约上，通过setINK、setXCPlugin 方法，设置INK合约、XCPlugin合约；通过getINK、getXCPlugin 方法检验；
+2）
+```
