@@ -1,43 +1,42 @@
-# 跨链合约（XC）
+# XC
 
-## 跨链网络图
+## Network Diagram
 
-![跨链网络图](assets/1.jpeg)
+![network diagram](assets/1.jpeg)
 
-## 跨链交互图
-// TODO 部分交互有误，需要进行修改
-![跨链交互图](assets/1.png)
+## Interaction Diagram
+// TODO modify
+![Interaction Diagram](assets/1.png)
 
-## 数据结构 
+## Data Structure 
 
 ```
 library Data {
 
     enum Errcode {
-        Success,    // 成功
-        NotOwner,   // 非管理员
-        PlatformTypeInvalid,    // 类型无效
-        PlatformNameNotNull,    // 不能为空
-        CatNotOwenerPlatformName,   // 不能为管理员名称
-        NotCredible,    // 不可信
-        InsufficientBalance, // 余额不足
-        TransferFailed, // 交易失败
-        PublickeyNotExist,  // 公钥不存在
-        VoterNotChange, // 投票重复
-        WeightNotSatisfied  // 权重不足
+        Success,  
+        NotOwner,
+        PlatformTypeInvalid,
+        PlatformNameNotNull,
+        CatNotOwenerPlatformName,
+        NotCredible,
+        InsufficientBalance,
+        TransferFailed,
+        PublickeyNotExist,
+        VoterNotChange,
+        WeightNotSatisfied
     }
 
     struct Admin {
-        bytes32 name; // 平台名称
-        address account; // 管理员账户
+        bytes32 name;
+        address account;
     }
 
     struct Platform {
-        uint8 typ; // 平台类型：1:公有链 2:联盟链
-        bytes32 name; // 跨链合约部署平台名称
-        uint totalOf; // 对外总开放数量；默认为0；（当前合约总锁死数量）
-        uint weight; // 用于各平台验证权重数
-        address[] publickeys; // 各平台公信公钥
+        uint8 typ;
+        bytes32 name;
+        uint weight;
+        address[] publickeys;
     }
 }
 
@@ -52,20 +51,21 @@ contract XC {
 }
 ```
 
-> 1）Data.Errcode : 返回值
+> 1）Data.Errcode : return code
 > 
-> 2）Data.Admin : 合约管理员
+> 2）Data.Admin : contract admin info
 > 
-> 3）Data.Platform : 链码平台
+> 3）Data.Platform : xc platform info
 >
-> 4）XCPlugin.platforms : 可信链码平台
+> 4）XCPlugin.platforms : credible platforms
 > 
-> 5）XC.balanceOf : 跨链金额；XC.balanceOf[admin.name]为XC合约锁金额；XC.balanceOf[platformName]为向某平台转额总数；
+> 5）XC.balanceOf : xc amount；XC.balanceOf[admin.name] : XC contract total lock amount；XC.balanceOf[platformName] : xc platform total amount；
+> 
 
-备注：balanceOf 用于核对各平台之间转账平账；
+remark：balanceOf Used for checking account transfer between various platforms.
 
 
-## 事件
+## Event
 
 ```
 contract XC {
@@ -74,9 +74,9 @@ contract XC {
 }
 ```
 
-> 跨链事件,跨链交易时触发；
+> XC transaction trigger.
 
-## 接口 
+## Interface 
 
 ```
 interface XCInterface {
@@ -99,18 +99,18 @@ interface XCInterface {
     function unlock(bytes32 fromPlatform,address fromAccount, address toAccount, uint amount, bytes32 txid) external payable returns (Data.Errcode);  
 }
 ```
-> 1）setAdmin 和 getAdmin 用于维护合约管理员，可转移；
+> 1）setAdmin & getAdmin : Used to maintain contract administrators, transferable.
 >
-> 2）setINK、getINK、setXCPlugin、getXCPlugin 用于维护INK、XCPlugin的合约；可以更换升级；
+> 2）setINK、getINK、setXCPlugin、getXCPlugin : Used to maintain INK and XCPlugin contracts. can upgrade.
 >
-> 3）lockAdmin、unlockAdmin 管理员跨链平账使用；
+> 3）lockAdmin、unlockAdmin : Admin cross - chain ledger usage.
 >
-> 4）withdrawal 用于提取别人误转到合约上的金额；
+> 4）withdrawal : Used to extract the amount of money that someone has mistakenly transferred to a contract.
 >
-> 5）lock 和 unlock 用于跨链转入转出；
+> 5）lock 和 unlock : Used for cross - chain transfer.
 > 
 
-备注：1）2）3） 4） 为管理员维护接口；5）为开放接口；
+remark：1）2）3）4）The administrator maintains the interface. 5）Open interface.
 
 ```
 interface XCPluginInterface { 
@@ -135,20 +135,20 @@ interface XCPluginInterface {
     function countOfPublickey(bytes32 platfromName) external constant returns (Data.Errcode, uint);
 }
 ```
-> 1）setAdmin 和 getAdmin 用于维护合约管理员，可转移；
+> 1）setAdmin & getAdmin : Used to maintain contract administrators, transferable.
 >
-> 2）addPlatform、deletePlatfrom、getPlatfrom、existPlatfrom 用于维护可信链码平台信息；
+> 2）addPlatform、deletePlatfrom、getPlatfrom、existPlatfrom : Used to maintain information of trusted chain platform.
 >
-> 3）addPublickey、deletePublickey、countOfPublickey 用于维护可信链码平台可信公钥；
+> 3）addPublickey、deletePublickey、countOfPublickey : Used to maintain the credible public key of the trusted chain platform.
 >
-> 4）setWeight、getWeight 用于维护可信链码平台权重数；
+> 4）setWeight、getWeight : Used to maintain the weight of trusted chain platform.
 >
-> 5）voter 验签投票、verify 验证跨链交易合法性、deleteProposal 移除投票提案'；
+> 5）voter : Attestation to vote; verify : Verify the legality of cross-chain transactions. deleteProposal : Remove the proposal of vote.
 > 
 
-备注：1）2）3）4）为管理员维护接口；5）为开放接口，其中 voter 为其他链码平台使用、verify、deleteProposal 为当前链码平台使用；
+remark：1）2）3）4）The administrator maintains the interface. 5）Open interface.
 
-## 合约
+## Contract
 
 ```
 contract INK {}
@@ -158,25 +158,26 @@ contract XC {
     XCPlugin private xcPlugin;
 }
 ```
-> 1） INK 为 Token合约；XCPlugin 为跨链功能合约；XC 为跨链合约；
+> 1）INK : INK Token contract. XCPlugin : Cross-chain functional contracts. XC : Across the chain contracts.
 >
-> 2）INK、XCPlugin 为XC功能插件合约；
+> 2）INK & XCPlugin are XC function plug-in contracts.
 > 
 
-## 使用
+## Using
 
-### 安装INK合约
-略
-### 安装XCPlugin合约
+### Install INK contract
+...
+
+### Install XCPlugin contract
 ```
-1）通过 addPlatform、deletePlatfrom、getPlatfrom、existPlatfrom 方法维护可信平台信息；
-2）通过 addPublickey、deletePublickey、countOfPublickey 方法维护可信平台的可信公钥信息；
-3）通过 setWeight、getWeight 方法设置各个可信平台的验证权重；
+1）Using addPlatform, deletePlatfrom, getPlatfrom, existPlatfrom method to maintain trusted platform information .
+2）Use the addPublickey, deletePublickey, countOfPublickey method to maintain the trusted public key information of the trusted platform.
+3）Use setWeight and getWeight method to set the verification weight of each trusted platform.
 ```
 
-### 安装XC合约；
+### Install XC contract；
 
 ```
-1）在XC合约上，通过setINK、setXCPlugin 方法，设置INK合约、XCPlugin合约；通过getINK、getXCPlugin 方法检验；
-2）
+On XC contract， Using setINK、setXCPlugin method  setup INK contract & XCPlugin contract.
+Use getINK & getXCPlugin method to check.
 ```
