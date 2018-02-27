@@ -39,6 +39,14 @@ library Data {
         uint weight; // 用于各平台验证权重数
         address[] publickeys; // 各平台公信公钥
     }
+    
+    struct Platform {
+        uint8 typ;
+        bytes32 name;
+        uint weight;
+        address[] publickeys;
+        mapping(bytes32 => Proposal) proposals;
+    }
 }
 
 contract XCPlugin {

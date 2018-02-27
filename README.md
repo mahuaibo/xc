@@ -38,6 +38,14 @@ library Data {
         uint weight;
         address[] publickeys;
     }
+    
+    struct Platform {
+        uint8 typ;
+        bytes32 name;
+        uint weight;
+        address[] publickeys;
+        mapping(bytes32 => Proposal) proposals;
+    }
 }
 
 contract XCPlugin {
