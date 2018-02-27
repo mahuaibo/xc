@@ -32,20 +32,19 @@ library Data {
         address account; // 管理员账户
     }
 
+    struct Proposal {
+        address fromAccount;
+        address toAccount;
+        uint amount;
+        address[] voters;
+    }
+
     struct Platform {
         uint8 typ; // 平台类型：1:公有链 2:联盟链
         bytes32 name; // 跨链合约部署平台名称
         uint totalOf; // 对外总开放数量；默认为0；（当前合约总锁死数量）
         uint weight; // 用于各平台验证权重数
         address[] publickeys; // 各平台公信公钥
-    }
-    
-    struct Platform {
-        uint8 typ;
-        bytes32 name;
-        uint weight;
-        address[] publickeys;
-        mapping(bytes32 => Proposal) proposals;
     }
 }
 

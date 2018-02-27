@@ -30,6 +30,13 @@ library Data {
     struct Admin {
         bytes32 name;
         address account;
+    } 
+
+    struct Proposal {
+        address fromAccount;
+        address toAccount;
+        uint amount;
+        address[] voters;
     }
 
     struct Platform {
@@ -37,14 +44,6 @@ library Data {
         bytes32 name;
         uint weight;
         address[] publickeys;
-    }
-    
-    struct Platform {
-        uint8 typ;
-        bytes32 name;
-        uint weight;
-        address[] publickeys;
-        mapping(bytes32 => Proposal) proposals;
     }
 }
 
